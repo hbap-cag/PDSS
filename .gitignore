@@ -19,7 +19,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-.env/
+.env
 lib/
 lib64/
 parts/
