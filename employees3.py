@@ -1,89 +1,54 @@
+"""
+Splits managers' names into first and last.
+
+Demonstrates a CSV writer.
+"""
+
 import csv
 import sys
 
-# Check for 2 inputs
+# Check for filename
 if len(sys.argv) != 3:
-    sys.exit("Usage: Python3 employees3.py SOURCE DEST")
+    sys.exit("Usage: python3 employees3.py SOURCE DEST")
 
-# Read rows from SOURCE
+# Read rows from source
 rows = []
-with open(sys.argv[1], "r", newline='') as file:
+with open(sys.argv[1], "r") as file:
 
     # Initialize reader
     reader = csv.reader(file)
 
-    # Read Header
+    # Read header
     header = next(reader)
 
-    # Insert into header EmployeeID
-    header.insert(0, "EmployeeID")
+    # Delete Manager from header
+    del header[0]
 
-    # Remember new Header
+    # Prepend ManagerLast and ManagerFirst to header
+    header.insert(0, "ManagerLast")
+    header.insert(1, "ManagerFirst")
+
+    # Remember new header
     rows.append(header)
-
-    # Initialize EnployeeID
-    id = 0
 
     # Iterate over rows
     for row in reader:
-        id += 1
 
-        # Add EmployeeID to row
-        row.insert(0, id)
+        # Split manager's name into first and last
+        first, last = row[0].split(" ")
 
-        # Remember new rows
+        # Remove Manager's full name
+        del row[0]
+
+        # Prepend manager's last name and first name to row
+        row.insert(0, last)
+        row.insert(1, first)
+
+        # Remember new row
         rows.append(row)
 
-# Write rows to DEST
-with open(sys.argv[2], "w", newline='') as file:
+# Write rows to destination
+with open(sys.argv[2], "w") as file:
     writer = csv.writer(file)
     for row in rows:
         writer.writerow(row)
-
-# Initialize some variables
-rows2 = []
-mid = 0
-
-# Read rows from DEST
-with open(sys.argv[2], "r", newline='') as file2:
-
-    # Initialize reader
-    reader = csv.reader(file2)
-
-    # Read Header
-    header = next(reader)
-
-    # Delete Manager from Header
-    # del header[0]
-    del header[1]
-
-    # Prepend ManagerId to header
-    header.insert(1, "ManagerId")
-
-    # Remember new Header
-    # rows2.append(header2)
-    print(header[0] + "," + header[1] + "," + header[2])
-
-    # Iterate over rows
-    for row in reader:
-        # Split manager's name into first and last variables to check later
-        try:
-            first, last = row[1].split(" ")
-        except:
-            first, last = "", ""
-        print(first + " " + last)
-##############################################################################
-        # Find ManagerID as mid
-        for row in reader:
-             print(row[1] + first + "/" + last)
-            if row[1] == "":
-                rows.insert(1, "")
-                rows.append(row)
-                print("1")
-            elif row[1] == first + " " + last:
-                mid = row[0]
-                rows.insert(1, mid)
-                rows.append(row)
-                print("2")
-            else:
-                print("3")
